@@ -1,0 +1,400 @@
+mysql> -- Create Database
+mysql> CREATE DATABASE Insurance_Management_System;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> 
+mysql> -- Use Database
+mysql> USE Insurance_Management_System;
+Database changed
+mysql> 
+mysql> -- ==========================================
+mysql> -- Table: Policyholders
+mysql> -- ==========================================
+mysql> CREATE TABLE Policyholders (
+    ->     policyholder_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     name VARCHAR(100) NOT NULL,
+    ->     phone VARCHAR(15),
+    ->     email VARCHAR(100),
+    ->     address VARCHAR(255)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> 
+mysql> -- ==========================================
+mysql> -- Table: Claim_Officers
+mysql> -- ==========================================
+mysql> CREATE TABLE Claim_Officers (
+    ->     officer_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     officer_name VARCHAR(100) NOT NULL,
+    ->     department VARCHAR(100),
+    ->     phone VARCHAR(15),
+    ->     email VARCHAR(100)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> 
+mysql> -- ==========================================
+mysql> -- Table: Insurance_Policies
+mysql> -- ==========================================
+mysql> CREATE TABLE Insurance_Policies (
+    ->     policy_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     policy_type VARCHAR(100) NOT NULL,
+    ->     premium_amount DECIMAL(10,2) NOT NULL,
+    ->     start_date DATE NOT NULL,
+    ->     end_date DATE NOT NULL,
+    ->     policyholder_id INT,
+    ->     
+    ->     CONSTRAINT fk_policyholder
+    ->     FOREIGN KEY (policyholder_id)
+    ->     REFERENCES Policyholders(policyholder_id)
+    ->     ON DELETE CASCADE
+    ->     ON UPDATE CASCADE
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> 
+mysql> -- ==========================================
+mysql> -- Table: Claims
+mysql> -- ==========================================
+mysql> CREATE TABLE Claims (
+    ->     claim_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     claim_date DATE NOT NULL,
+    ->     claim_amount DECIMAL(10,2) NOT NULL,
+    ->     claim_status VARCHAR(50),
+    ->     description TEXT,
+    ->     policy_id INT,
+    ->     officer_id INT,
+    -> 
+    ->     CONSTRAINT fk_policy
+    ->     FOREIGN KEY (policy_id)
+    ->     REFERENCES Insurance_Policies(policy_id)
+    ->     ON DELETE CASCADE
+    ->     ON UPDATE CASCADE,
+    -> 
+    ->     CONSTRAINT fk_officer
+    ->     FOREIGN KEY (officer_id)
+    ->     REFERENCES Claim_Officers(officer_id)
+    ->     ON DELETE SET NULL
+    ->     ON UPDATE CASCADE
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> 
+mysql> -- ==========================================
+mysql> -- Table: Payments
+mysql> -- ==========================================
+mysql> CREATE TABLE Payments (
+    ->     payment_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     payment_date DATE NOT NULL,
+    ->     amount_paid DECIMAL(10,2) NOT NULL,
+    ->     payment_status VARCHAR(50),
+    ->     payment_method VARCHAR(50),
+    ->     claim_id INT UNIQUE,
+    -> 
+    ->     CONSTRAINT fk_claim
+    ->     FOREIGN KEY (claim_id)
+    ->     REFERENCES Claims(claim_id)
+    ->     ON DELETE CASCADE
+    ->     ON UPDATE CASCADE
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> -- ==========================================
+mysql> -- Table: Policyholders
+mysql> -- ==========================================
+mysql> 
+mysql> INSERT INTO Policyholders (name, phone, email, address) VALUES
+    -> ('Rahul Sharma', '9876543210', 'rahul@gmail.com', 'Hyderabad'),
+    -> ('Priya Reddy', '9876543211', 'priya@gmail.com', 'Bengaluru'),
+    -> ('Amit Kumar', '9876543212', 'amit@gmail.com', 'Chennai'),
+    -> ('Sneha Patel', NULL, 'sneha@gmail.com', 'Mumbai'),
+    -> ('Arjun Singh', '9876543214', NULL, 'Delhi'),
+    -> ('Kiran Rao', '9876543215', 'kiran@gmail.com', NULL),
+    -> ('Meera Nair', '9876543216', 'meera@gmail.com', 'Kochi'),
+    -> ('Vikram Das', NULL, 'vikram@gmail.com', 'Pune'),
+    -> ('Anjali Gupta', '9876543218', NULL, NULL),
+    -> ('Rohan Verma', '9876543219', 'rohan@gmail.com', 'Kolkata');
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> 
+mysql> 
+mysql> -- ==========================================
+mysql> -- Table: Claim_Officers
+mysql> -- ==========================================
+mysql> 
+mysql> INSERT INTO Claim_Officers (officer_name, department, phone, email) VALUES
+    -> ('Suresh Kumar', 'Health', '9123456780', 'suresh@insurance.com'),
+    -> ('Anita Roy', 'Vehicle', '9123456781', 'anita@insurance.com'),
+    -> ('Ravi Teja', 'Life', '9123456782', 'ravi@insurance.com'),
+    -> ('Deepika Sharma', 'Travel', NULL, 'deepika@insurance.com'),
+    -> ('Manoj Gupta', 'Health', '9123456784', NULL),
+    -> ('Pooja Singh', 'Home', '9123456785', 'pooja@insurance.com'),
+    -> ('Rajesh Nair', NULL, '9123456786', 'rajesh@insurance.com'),
+    -> ('Neha Kapoor', 'Vehicle', NULL, NULL),
+    -> ('Arvind Rao', 'Life', '9123456788', 'arvind@insurance.com'),
+    -> ('Kavitha Reddy', 'Travel', '9123456789', 'kavitha@insurance.com');
+Query OK, 10 rows affected (0.00 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> 
+mysql> 
+mysql> -- ==========================================
+mysql> -- Table: Insurance_Policies
+mysql> -- ==========================================
+mysql> 
+mysql> INSERT INTO Insurance_Policies
+    -> (policy_type, premium_amount, start_date, end_date, policyholder_id)
+    -> VALUES
+    -> ('Health Insurance', 12000.00, '2025-01-01', '2026-01-01', 1),
+    -> ('Vehicle Insurance', 18000.00, '2025-02-10', '2026-02-10', 2),
+    -> ('Life Insurance', 25000.00, '2025-03-15', '2035-03-15', 3),
+    -> ('Home Insurance', 15000.00, '2025-04-20', '2026-04-20', 4),
+    -> ('Travel Insurance', 5000.00, '2025-05-01', '2025-06-01', 5),
+    -> ('Health Insurance', 13500.00, '2025-06-10', '2026-06-10', 6),
+    -> ('Vehicle Insurance', 17500.00, '2025-07-05', '2026-07-05', 7),
+    -> ('Life Insurance', 30000.00, '2025-08-01', '2040-08-01', 8),
+    -> ('Home Insurance', 16000.00, '2025-09-12', '2026-09-12', 9),
+    -> ('Travel Insurance', 4500.00, '2025-10-01', '2025-11-01', 10);
+Query OK, 10 rows affected (0.00 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> 
+mysql> 
+mysql> -- ==========================================
+mysql> -- Table: Claims
+mysql> -- ==========================================
+mysql> 
+mysql> INSERT INTO Claims
+    -> (claim_date, claim_amount, claim_status, description, policy_id, officer_id)
+    -> VALUES
+    -> ('2025-02-15', 10000.00, 'Approved', 'Hospital expenses', 1, 1),
+    -> ('2025-03-12', 25000.00, 'Pending', 'Vehicle accident', 2, 2),
+    -> ('2025-04-18', 50000.00, 'Rejected', 'Policy expired', 3, 3),
+    -> ('2025-05-25', 12000.00, 'Approved', NULL, 4, 4),
+    -> ('2025-06-14', 8000.00, 'Pending', 'Travel cancellation', 5, 5),
+    -> ('2025-07-08', 15000.00, 'Approved', 'Medical reimbursement', 6, NULL),
+    -> ('2025-08-22', 30000.00, 'Pending', NULL, 7, 7),
+    -> ('2025-09-10', 45000.00, 'Rejected', 'Incomplete documents', 8, 8),
+    -> ('2025-10-03', 22000.00, 'Approved', 'House damage claim', 9, 9),
+    -> ('2025-11-15', 6000.00, 'Pending', 'Lost baggage', 10, 10);
+Query OK, 10 rows affected (0.00 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> -- ==========================================
+mysql> -- Table: Payments
+mysql> -- ==========================================
+mysql> 
+mysql> INSERT INTO Payments
+    -> (payment_date, amount_paid, payment_status, payment_method, claim_id)
+    -> VALUES
+    -> ('2025-02-20',10000.00,'Completed','UPI',1),
+    -> ('2025-03-18',0.00,'Pending','Bank Transfer',2),
+    -> ('2025-04-22',0.00,'Rejected',NULL,3),
+    -> ('2025-05-28',12000.00,'Completed','Credit Card',4),
+    -> ('2025-06-20',0.00,'Pending','Debit Card',5),
+    -> ('2025-07-10',15000.00,'Completed','UPI',6),
+    -> ('2025-08-25',0.00,'Pending',NULL,7),
+    -> ('2025-09-15',0.00,'Rejected','Bank Transfer',8),
+    -> ('2025-10-05',22000.00,'Completed','Net Banking',9),
+    -> ('2025-11-20',0.00,'Pending','UPI',10);
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> #Display all policyholders.
+mysql> SELECT * FROM Policyholders;
++-----------------+--------------+------------+------------------+-----------+
+| policyholder_id | name         | phone      | email            | address   |
++-----------------+--------------+------------+------------------+-----------+
+|               1 | Rahul Sharma | 9876543210 | rahul@gmail.com  | Hyderabad |
+|               2 | Priya Reddy  | 9876543211 | priya@gmail.com  | Bengaluru |
+|               3 | Amit Kumar   | 9876543212 | amit@gmail.com   | Chennai   |
+|               4 | Sneha Patel  | NULL       | sneha@gmail.com  | Mumbai    |
+|               5 | Arjun Singh  | 9876543214 | NULL             | Delhi     |
+|               6 | Kiran Rao    | 9876543215 | kiran@gmail.com  | NULL      |
+|               7 | Meera Nair   | 9876543216 | meera@gmail.com  | Kochi     |
+|               8 | Vikram Das   | NULL       | vikram@gmail.com | Pune      |
+|               9 | Anjali Gupta | 9876543218 | NULL             | NULL      |
+|              10 | Rohan Verma  | 9876543219 | rohan@gmail.com  | Kolkata   |
++-----------------+--------------+------------+------------------+-----------+
+10 rows in set (0.00 sec)
+
+mysql> #Display all insurance policies with premium amount greater than 15,000.
+mysql> SELECT *
+    -> FROM Insurance_Policies
+    -> WHERE premium_amount > 15000;
++-----------+-------------------+----------------+------------+------------+-----------------+
+| policy_id | policy_type       | premium_amount | start_date | end_date   | policyholder_id |
++-----------+-------------------+----------------+------------+------------+-----------------+
+|         2 | Vehicle Insurance |       18000.00 | 2025-02-10 | 2026-02-10 |               2 |
+|         3 | Life Insurance    |       25000.00 | 2025-03-15 | 2035-03-15 |               3 |
+|         7 | Vehicle Insurance |       17500.00 | 2025-07-05 | 2026-07-05 |               7 |
+|         8 | Life Insurance    |       30000.00 | 2025-08-01 | 2040-08-01 |               8 |
+|         9 | Home Insurance    |       16000.00 | 2025-09-12 | 2026-09-12 |               9 |
++-----------+-------------------+----------------+------------+------------+-----------------+
+5 rows in set (0.01 sec)
+
+mysql> #Display all approved claims.
+mysql> SELECT *
+    -> FROM Claims
+    -> WHERE claim_status = 'Approved';
++----------+------------+--------------+--------------+-----------------------+-----------+------------+
+| claim_id | claim_date | claim_amount | claim_status | description           | policy_id | officer_id |
++----------+------------+--------------+--------------+-----------------------+-----------+------------+
+|        1 | 2025-02-15 |     10000.00 | Approved     | Hospital expenses     |         1 |          1 |
+|        4 | 2025-05-25 |     12000.00 | Approved     | NULL                  |         4 |          4 |
+|        6 | 2025-07-08 |     15000.00 | Approved     | Medical reimbursement |         6 |       NULL |
+|        9 | 2025-10-03 |     22000.00 | Approved     | House damage claim    |         9 |          9 |
++----------+------------+--------------+--------------+-----------------------+-----------+------------+
+4 rows in set (0.01 sec)
+
+mysql> #Display the policyholder's name along with their policy type.
+mysql> SELECT
+    ->     p.name,
+    ->     i.policy_type
+    -> FROM Policyholders p
+    -> JOIN Insurance_Policies i
+    -> ON p.policyholder_id = i.policyholder_id;
++--------------+-------------------+
+| name         | policy_type       |
++--------------+-------------------+
+| Rahul Sharma | Health Insurance  |
+| Priya Reddy  | Vehicle Insurance |
+| Amit Kumar   | Life Insurance    |
+| Sneha Patel  | Home Insurance    |
+| Arjun Singh  | Travel Insurance  |
+| Kiran Rao    | Health Insurance  |
+| Meera Nair   | Vehicle Insurance |
+| Vikram Das   | Life Insurance    |
+| Anjali Gupta | Home Insurance    |
+| Rohan Verma  | Travel Insurance  |
++--------------+-------------------+
+10 rows in set (0.00 sec)
+
+mysql> #Display each claim along with the officer handling it.
+mysql> SELECT
+    ->     c.claim_id,
+    ->     c.claim_status,
+    ->     o.officer_name
+    -> FROM Claims c
+    -> JOIN Claim_Officers o
+    -> ON c.officer_id = o.officer_id;
++----------+--------------+----------------+
+| claim_id | claim_status | officer_name   |
++----------+--------------+----------------+
+|        1 | Approved     | Suresh Kumar   |
+|        2 | Pending      | Anita Roy      |
+|        3 | Rejected     | Ravi Teja      |
+|        4 | Approved     | Deepika Sharma |
+|        5 | Pending      | Manoj Gupta    |
+|        7 | Pending      | Rajesh Nair    |
+|        8 | Rejected     | Neha Kapoor    |
+|        9 | Approved     | Arvind Rao     |
+|       10 | Pending      | Kavitha Reddy  |
++----------+--------------+----------------+
+9 rows in set (0.00 sec)
+
+mysql> #Display the total premium collected for each policy type.
+mysql> SELECT
+    ->     policy_type,
+    ->     SUM(premium_amount) AS Total_Premium
+    -> FROM Insurance_Policies
+    -> GROUP BY policy_type;
++-------------------+---------------+
+| policy_type       | Total_Premium |
++-------------------+---------------+
+| Health Insurance  |      25500.00 |
+| Vehicle Insurance |      35500.00 |
+| Life Insurance    |      55000.00 |
+| Home Insurance    |      31000.00 |
+| Travel Insurance  |       9500.00 |
++-------------------+---------------+
+5 rows in set (0.01 sec)
+
+mysql> #Display all payments whose status is Pending.
+mysql> SELECT *
+    -> FROM Payments
+    -> WHERE payment_status = 'Pending';
++------------+--------------+-------------+----------------+----------------+----------+
+| payment_id | payment_date | amount_paid | payment_status | payment_method | claim_id |
++------------+--------------+-------------+----------------+----------------+----------+
+|          2 | 2025-03-18   |        0.00 | Pending        | Bank Transfer  |        2 |
+|          5 | 2025-06-20   |        0.00 | Pending        | Debit Card     |        5 |
+|          7 | 2025-08-25   |        0.00 | Pending        | NULL           |        7 |
+|         10 | 2025-11-20   |        0.00 | Pending        | UPI            |       10 |
++------------+--------------+-------------+----------------+----------------+----------+
+4 rows in set (0.00 sec)
+
+mysql> #Display the policyholder's name, policy type, claim amount, and payment amount.
+mysql> SELECT
+    ->     p.name,
+    ->     i.policy_type,
+    ->     c.claim_amount,
+    ->     pay.amount_paid
+    -> FROM Policyholders p
+    -> JOIN Insurance_Policies i
+    -> ON p.policyholder_id = i.policyholder_id
+    -> JOIN Claims c
+    -> ON i.policy_id = c.policy_id
+    -> JOIN Payments pay
+    -> ON c.claim_id = pay.claim_id;
++--------------+-------------------+--------------+-------------+
+| name         | policy_type       | claim_amount | amount_paid |
++--------------+-------------------+--------------+-------------+
+| Rahul Sharma | Health Insurance  |     10000.00 |    10000.00 |
+| Priya Reddy  | Vehicle Insurance |     25000.00 |        0.00 |
+| Amit Kumar   | Life Insurance    |     50000.00 |        0.00 |
+| Sneha Patel  | Home Insurance    |     12000.00 |    12000.00 |
+| Arjun Singh  | Travel Insurance  |      8000.00 |        0.00 |
+| Kiran Rao    | Health Insurance  |     15000.00 |    15000.00 |
+| Meera Nair   | Vehicle Insurance |     30000.00 |        0.00 |
+| Vikram Das   | Life Insurance    |     45000.00 |        0.00 |
+| Anjali Gupta | Home Insurance    |     22000.00 |    22000.00 |
+| Rohan Verma  | Travel Insurance  |      6000.00 |        0.00 |
++--------------+-------------------+--------------+-------------+
+10 rows in set (0.00 sec)
+
+mysql> #Display the number of claims handled by each claim officer.
+mysql> SELECT
+    ->     o.officer_name,
+    ->     COUNT(c.claim_id) AS Total_Claims
+    -> FROM Claim_Officers o
+    -> LEFT JOIN Claims c
+    -> ON o.officer_id = c.officer_id
+    -> GROUP BY o.officer_name;
++----------------+--------------+
+| officer_name   | Total_Claims |
++----------------+--------------+
+| Suresh Kumar   |            1 |
+| Anita Roy      |            1 |
+| Ravi Teja      |            1 |
+| Deepika Sharma |            1 |
+| Manoj Gupta    |            1 |
+| Pooja Singh    |            0 |
+| Rajesh Nair    |            1 |
+| Neha Kapoor    |            1 |
+| Arvind Rao     |            1 |
+| Kavitha Reddy  |            1 |
++----------------+--------------+
+10 rows in set (0.00 sec)
+
+mysql> #Display the policyholder(s) who paid the highest insurance premium.
+mysql> SELECT
+    ->     p.name,
+    ->     i.policy_type,
+    ->     i.premium_amount
+    -> FROM Policyholders p
+    -> JOIN Insurance_Policies i
+    -> ON p.policyholder_id = i.policyholder_id
+    -> WHERE i.premium_amount =
+    -> (
+    ->     SELECT MAX(premium_amount)
+    ->     FROM Insurance_Policies
+    -> );
++------------+----------------+----------------+
+| name       | policy_type    | premium_amount |
++------------+----------------+----------------+
+| Vikram Das | Life Insurance |       30000.00 |
++------------+----------------+----------------+
+1 row in set (0.01 sec)
+
