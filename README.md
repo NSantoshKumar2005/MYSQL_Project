@@ -1,6 +1,5 @@
     BOOKSTORE MANAGEMENT SYSTEM
-      
-      ----------------------------
+    ----------------------------
       
       Project Overview
       ----------------
