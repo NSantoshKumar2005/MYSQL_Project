@@ -9,7 +9,6 @@
       The database demonstrates the implementation of:
       
       • Database Creation
-      
       • Table Creation
       • Primary Key Constraints
       • Foreign Key Constraints
