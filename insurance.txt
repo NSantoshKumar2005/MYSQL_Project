@@ -201,7 +201,7 @@ mysql> INSERT INTO Payments
 Query OK, 10 rows affected (0.01 sec)
 Records: 10  Duplicates: 0  Warnings: 0
 
-mysql> #Display all policyholders.
+mysql> # 1. Display all policyholders.
 mysql> SELECT * FROM Policyholders;
 +-----------------+--------------+------------+------------------+-----------+
 | policyholder_id | name         | phone      | email            | address   |
@@ -219,7 +219,7 @@ mysql> SELECT * FROM Policyholders;
 +-----------------+--------------+------------+------------------+-----------+
 10 rows in set (0.00 sec)
 
-mysql> #Display all insurance policies with premium amount greater than 15,000.
+mysql> # 2. Display all insurance policies with premium amount greater than 15,000.
 mysql> SELECT *
     -> FROM Insurance_Policies
     -> WHERE premium_amount > 15000;
@@ -234,7 +234,7 @@ mysql> SELECT *
 +-----------+-------------------+----------------+------------+------------+-----------------+
 5 rows in set (0.01 sec)
 
-mysql> #Display all approved claims.
+mysql> # 3. Display all approved claims.
 mysql> SELECT *
     -> FROM Claims
     -> WHERE claim_status = 'Approved';
@@ -248,7 +248,7 @@ mysql> SELECT *
 +----------+------------+--------------+--------------+-----------------------+-----------+------------+
 4 rows in set (0.01 sec)
 
-mysql> #Display the policyholder's name along with their policy type.
+mysql> # 4. Display the policyholder's name along with their policy type.
 mysql> SELECT
     ->     p.name,
     ->     i.policy_type
@@ -271,7 +271,7 @@ mysql> SELECT
 +--------------+-------------------+
 10 rows in set (0.00 sec)
 
-mysql> #Display each claim along with the officer handling it.
+mysql> # 5. Display each claim along with the officer handling it.
 mysql> SELECT
     ->     c.claim_id,
     ->     c.claim_status,
@@ -294,7 +294,7 @@ mysql> SELECT
 +----------+--------------+----------------+
 9 rows in set (0.00 sec)
 
-mysql> #Display the total premium collected for each policy type.
+mysql> # 6. Display the total premium collected for each policy type.
 mysql> SELECT
     ->     policy_type,
     ->     SUM(premium_amount) AS Total_Premium
@@ -311,7 +311,7 @@ mysql> SELECT
 +-------------------+---------------+
 5 rows in set (0.01 sec)
 
-mysql> #Display all payments whose status is Pending.
+mysql> # 7. Display all payments whose status is Pending.
 mysql> SELECT *
     -> FROM Payments
     -> WHERE payment_status = 'Pending';
@@ -325,7 +325,7 @@ mysql> SELECT *
 +------------+--------------+-------------+----------------+----------------+----------+
 4 rows in set (0.00 sec)
 
-mysql> #Display the policyholder's name, policy type, claim amount, and payment amount.
+mysql> # 8. Display the policyholder's name, policy type, claim amount, and payment amount.
 mysql> SELECT
     ->     p.name,
     ->     i.policy_type,
@@ -354,7 +354,7 @@ mysql> SELECT
 +--------------+-------------------+--------------+-------------+
 10 rows in set (0.00 sec)
 
-mysql> #Display the number of claims handled by each claim officer.
+mysql> # 9. Display the number of claims handled by each claim officer.
 mysql> SELECT
     ->     o.officer_name,
     ->     COUNT(c.claim_id) AS Total_Claims
@@ -378,7 +378,7 @@ mysql> SELECT
 +----------------+--------------+
 10 rows in set (0.00 sec)
 
-mysql> #Display the policyholder(s) who paid the highest insurance premium.
+mysql> # 10. Display the policyholder(s) who paid the highest insurance premium.
 mysql> SELECT
     ->     p.name,
     ->     i.policy_type,
